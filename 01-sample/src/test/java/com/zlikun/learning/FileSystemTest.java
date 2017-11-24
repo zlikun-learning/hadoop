@@ -24,7 +24,7 @@ public class FileSystemTest {
      * @throws IOException
      */
     @Test
-    public void test() throws IOException, InterruptedException {
+    public void get() throws IOException, InterruptedException {
 
         final String uri = "hdfs://hadoop.zlikun.com:9000/user/hadoop/lang.txt" ;
 
@@ -39,5 +39,17 @@ public class FileSystemTest {
         }
 
     }
+
+    @Test
+    public void create() {
+
+    }
+
+    @Test
+    public void mkdirs() {
+
+    }
+
+
 
 }
