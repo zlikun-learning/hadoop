@@ -35,4 +35,8 @@
 
     </dependencies>
 
+    <build>
+        <finalName>sample</finalName>
+    </build>
+
 </project>

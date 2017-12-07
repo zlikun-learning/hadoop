@@ -33,7 +33,7 @@ public class HadoopUrlTest {
 
         InputStream in = null ;
         try {
-            in = new URL("hdfs://hadoop.zlikun.com:9000/user/hadoop/lang.txt").openStream() ;
+            in = new URL("hdfs://hadoop.zlikun.com:9000/user/hadoop/input/lang.txt").openStream() ;
             IOUtils.copyBytes(in, System.out, 4096, false);
         } catch (MalformedURLException e) {
             e.printStackTrace();

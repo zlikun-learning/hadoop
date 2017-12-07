@@ -26,7 +26,7 @@ public class FileSystemTest {
     @Test
     public void get() throws IOException, InterruptedException {
 
-        final String uri = "hdfs://hadoop.zlikun.com:9000/user/hadoop/lang.txt" ;
+        final String uri = "hdfs://hadoop.zlikun.com:9000/user/hadoop/input/lang.txt" ;
 
         Configuration conf = new Configuration() ;
         FileSystem fs = FileSystem.get(URI.create(uri), conf, "hadoop") ;
