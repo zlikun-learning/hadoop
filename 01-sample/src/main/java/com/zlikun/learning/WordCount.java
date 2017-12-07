@@ -19,6 +19,14 @@ public class WordCount {
 
     public static void main(String[] args) throws IOException, ClassNotFoundException, InterruptedException {
 
+        args = new String[] {
+                "hdfs://hadoop.zlikun.com:9000/user/hadoop/input",
+                "hdfs://hadoop.zlikun.com:9000/user/hadoop/output/02"
+        } ;
+
+        // 设置用户名
+        System.setProperty("HADOOP_USER_NAME", "hadoop");
+
         Configuration conf = new Configuration();
 
         Job job = Job.getInstance(conf);

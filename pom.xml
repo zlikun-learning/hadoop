@@ -14,13 +14,6 @@
         <module>02-mapreduce</module>
     </modules>
 
-    <repositories>
-        <repository>
-            <id>apache</id>
-            <url>http://maven.apache.org</url>
-        </repository>
-    </repositories>
-
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
