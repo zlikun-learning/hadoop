@@ -9,7 +9,7 @@ import org.junit.Test;
 import java.util.Map;
 
 /**
- * 打印Tool的Configuratio对象中所有属性的键-值对
+ * 打印Tool的Configuration对象中所有属性的键-值对
  * @author zlikun <zlikun-dev@hotmail.com>
  * @date 2017-12-04 10:20
  */
