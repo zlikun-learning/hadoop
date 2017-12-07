@@ -21,6 +21,7 @@
         <name>mapreduce.framework.name</name>
         <value>yarn</value>
     </property>
+    <!-- 解决 `/bin/bash: line 0: fg: no job control` 问题 -->
     <property>
         <name>mapreduce.app-submission.cross-platform</name>
         <value>true</value>
