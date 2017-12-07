@@ -21,17 +21,17 @@ public class WordCount {
 
         args = new String[] {
                 "hdfs://hadoop.zlikun.com:9000/user/hadoop/input",
-                "hdfs://hadoop.zlikun.com:9000/user/hadoop/output/12"
+                "hdfs://hadoop.zlikun.com:9000/user/hadoop/output/13"
         } ;
 
         System.setProperty("HADOOP_USER_NAME", "hadoop");
 
         // 如果这里配置了，可以不需要在classpath下放`四个配置文件`，但更建议使用配置文件，会自动加载，打包时候又不会打包进去
         Configuration conf = new Configuration();
-        conf.set("yarn.resourcemanager.hostname", "hadoop.zlikun.com");
-        conf.set("fs.defaultFS", "hdfs://hadoop.zlikun.com:9000");
-        conf.set("mapreduce.framework.name", "yarn");
-        conf.set("mapreduce.app-submission.cross-platform", "true");
+//        conf.set("yarn.resourcemanager.hostname", "hadoop.zlikun.com");
+//        conf.set("fs.defaultFS", "hdfs://hadoop.zlikun.com:9000");
+//        conf.set("mapreduce.framework.name", "yarn");
+//        conf.set("mapreduce.app-submission.cross-platform", "true");
 
         Job job = Job.getInstance(conf);
         job.setJar("E:\\studio\\git\\hadoop\\02-mapreduce\\target\\mr.jar");
