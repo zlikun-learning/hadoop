@@ -20,6 +20,6 @@
     </property>
     <property>
         <name>yarn.resourcemanager.hostname</name>
-        <value>hadoop.zlikun.com</value>
+        <value>zlikun</value>
     </property>
 </configuration>

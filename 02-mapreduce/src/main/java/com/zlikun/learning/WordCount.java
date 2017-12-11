@@ -20,11 +20,11 @@ public class WordCount {
     public static void main(String[] args) throws IOException, ClassNotFoundException, InterruptedException {
 
         args = new String[] {
-                "hdfs://hadoop.zlikun.com:9000/user/hadoop/input",
-                "hdfs://hadoop.zlikun.com:9000/user/hadoop/output/13"
+                "hdfs://zlikun:9000/input",
+                "hdfs://zlikun:9000/output/03"
         } ;
 
-        System.setProperty("HADOOP_USER_NAME", "hadoop");
+        System.setProperty("HADOOP_USER_NAME", "zlikun");
 
         // 如果这里配置了，可以不需要在classpath下放`四个配置文件`，但更建议使用配置文件，会自动加载，打包时候又不会打包进去
         Configuration conf = new Configuration();

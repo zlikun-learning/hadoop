@@ -18,6 +18,6 @@
 <configuration>
     <property>
         <name>fs.defaultFS</name>
-        <value>hdfs://hadoop.zlikun.com:9000</value>
+        <value>hdfs://zlikun:9000</value>
     </property>
 </configuration>
