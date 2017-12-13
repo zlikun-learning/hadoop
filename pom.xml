@@ -12,6 +12,7 @@
     <modules>
         <module>01-sample</module>
         <module>02-mapreduce</module>
+        <module>03-mapreduce-sort</module>
     </modules>
 
     <properties>
