@@ -5,6 +5,7 @@ import org.apache.hadoop.io.RawComparator;
 import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.io.WritableComparator;
 import org.apache.hadoop.util.StringUtils;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.*;
@@ -21,7 +22,7 @@ import static org.junit.Assert.assertThat;
  */
 public class WritableTest {
 
-    @Test
+    @Test @Ignore
     public void serialization() throws IOException {
 
         // 使用整型数据类型测试
@@ -39,7 +40,7 @@ public class WritableTest {
         assertThat(StringUtils.byteToHexString(data), is("00000080"));
     }
 
-    @Test
+    @Test @Ignore
     public void deserialization() throws IOException {
 
         // 假设序列化后的数据
@@ -57,7 +58,7 @@ public class WritableTest {
 
     }
 
-    @Test
+    @Test @Ignore
     public void compare() {
         RawComparator<IntWritable> comparator = WritableComparator.get(IntWritable.class);
 

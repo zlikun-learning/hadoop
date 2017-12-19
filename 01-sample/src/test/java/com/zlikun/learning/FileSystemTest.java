@@ -6,6 +6,7 @@ import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IOUtils;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
@@ -27,7 +28,7 @@ import static org.junit.Assert.assertTrue;
 @Slf4j
 public class FileSystemTest {
 
-    @Test
+    @Test @Ignore
     public void get() throws IOException, InterruptedException {
 
         // 设置用户名
@@ -52,7 +53,7 @@ public class FileSystemTest {
      * @throws IOException
      * @throws InterruptedException
      */
-    @Test
+    @Test @Ignore
     public void create() throws IOException, InterruptedException {
         System.setProperty("HADOOP_USER_NAME", "hadoop");
 
@@ -73,7 +74,7 @@ public class FileSystemTest {
      * 判断目录(文件)是否存在
      * @throws IOException
      */
-    @Test
+    @Test @Ignore
     public void exists() throws IOException {
         Configuration conf = new Configuration() ;
         FileSystem fs = FileSystem.get(conf) ;
@@ -84,7 +85,7 @@ public class FileSystemTest {
     /**
      * 列出文件
      */
-    @Test
+    @Test @Ignore
     public void list() throws IOException {
         Configuration conf = new Configuration() ;
         FileSystem fs = FileSystem.get(conf) ;
@@ -98,7 +99,7 @@ public class FileSystemTest {
      * @throws IOException
      * @throws InterruptedException
      */
-    @Test
+    @Test @Ignore
     public void mkdirs() throws IOException, InterruptedException {
         System.setProperty("HADOOP_USER_NAME", "hadoop");
         Configuration conf = new Configuration() ;
