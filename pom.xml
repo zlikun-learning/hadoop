@@ -14,6 +14,7 @@
         <module>02-mapreduce</module>
         <module>03-mapreduce-sort</module>
         <module>04-example</module>
+        <module>05-avro</module>
     </modules>
 
     <properties>
@@ -96,6 +97,12 @@
                 <artifactId>mrunit</artifactId>
                 <classifier>hadoop2</classifier>
                 <version>1.1.0</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.avro</groupId>
+                <artifactId>avro</artifactId>
+                <version>1.8.2</version>
             </dependency>
 
         </dependencies>
