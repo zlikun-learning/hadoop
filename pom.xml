@@ -15,6 +15,7 @@
         <module>03-mapreduce-sort</module>
         <module>04-example</module>
         <module>05-avro</module>
+        <module>06-mapreduce-rpc</module>
     </modules>
 
     <properties>
