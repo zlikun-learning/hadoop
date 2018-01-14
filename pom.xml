@@ -16,13 +16,15 @@
         <module>04-example</module>
         <module>05-avro</module>
         <module>06-mapreduce-rpc</module>
+        <module>07-hbase</module>
     </modules>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
-        <hadoop.version>2.9.0</hadoop.version>
+        <hadoop.version>2.7.5</hadoop.version>
         <avro.version>1.7.7</avro.version>
+        <hbase.version>1.2.6</hbase.version>
     </properties>
 
     <dependencyManagement>
@@ -118,6 +120,19 @@
                 <groupId>org.apache.avro</groupId>
                 <artifactId>avro-mapred</artifactId>
                 <version>${avro.version}</version>
+            </dependency>
+
+            <!-- hbase -->
+            <dependency>
+                <groupId>org.apache.hbase</groupId>
+                <artifactId>hbase-client</artifactId>
+                <version>${hbase.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.hbase</groupId>
+                <artifactId>hbase-server</artifactId>
+                <version>${hbase.version}</version>
             </dependency>
 
         </dependencies>
