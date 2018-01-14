@@ -1,8 +1,9 @@
 package com.zlikun.learning.login;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.math.NumberUtils;
-import org.apache.commons.lang3.time.DateUtils;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.math.NumberUtils;
+import org.apache.commons.lang.time.DateUtils;
 
 import java.text.ParseException;
 import java.util.Date;
@@ -31,7 +32,7 @@ public class LoginLogParser {
             client = ClientType.IOS;
         }
         try {
-            loginTime = DateUtils.parseDate(array[4], "yyyy-MM-dd HH:mm:ss.0");
+            loginTime = DateUtils.parseDate(array[4], new String [] {"yyyy-MM-dd HH:mm:ss.0"});
         } catch (ParseException e) {
             e.printStackTrace();
         }
