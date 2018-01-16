@@ -59,7 +59,7 @@ public class LoginDaysMapReduceLocal extends Configured implements Tool {
         job.setMapOutputKeyClass(Text.class);
         job.setMapOutputValueClass(NullWritable.class);
         job.setInputFormatClass(DBInputFormat.class);
-        FileOutputFormat.setOutputPath(job, new Path("hdfs://zlikun:9000/login_days/example4"));
+        FileOutputFormat.setOutputPath(job, new Path("hdfs://zlikun:9000/login_days/example2"));
         return job.waitForCompletion(true) ? 1 : 0 ;
     }
 

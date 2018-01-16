@@ -45,18 +45,19 @@ public class LoginDaysMapReduce extends Configured implements Tool {
         job.setNumReduceTasks(0);
         job.setMapOutputKeyClass(Text.class);
         job.setMapOutputValueClass(NullWritable.class);
-        job.setInputFormatClass(DBInputFormat.class);
+        // job.setInputFormatClass(DBInputFormat.class);
         FileOutputFormat.setOutputPath(job, new Path("hdfs://zlikun:9000/login_days/example"));
         // 添加mysql驱动依赖(避免直接在集群中添加，要重启集群，不方便)
         // 下面语句只能集群中运行mapreduce程序时用，本地执行会报错，另一种方法两者可以兼顾，即：通过打包将依赖JAR一并打包实现
         // job.addArchiveToClassPath(new Path("hdfs://zlikun:9000/lib/mysql/mysql-connector-java-5.1.45.jar"));
-        job.addArchiveToClassPath(new Path("/lib/mysql/mysql-connector-java-5.1.45.jar"));
+        job.addArchiveToClassPath(new Path("/lib/mysql/mysql-connector-java-5.1.30.jar"));
         DBConfiguration.configureDB(job.getConfiguration(),
                 "com.mysql.jdbc.Driver",
                 "jdbc:mysql://192.168.9.223:3306/USER_LOG_LOGIN",
                 "root",
                 "ablejava");
         String [] fields = {"USER_ID", "LOGIN_TIME"};
+        // DBInputFormat.setInput() 隐含了：job.setInputFormatClass(DBInputFormat.class);
         DBInputFormat.setInput(job, TblRecord.class,
                 "NEW_LOGIN_LOG", null, null, fields);
         return job.waitForCompletion(true) ? 1 : 0 ;
