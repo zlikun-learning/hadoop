@@ -4,14 +4,8 @@ import com.zlikun.learning.logins.TblRecord;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.KeyValue;
-import org.apache.hadoop.hbase.TableName;
-import org.apache.hadoop.hbase.client.Connection;
-import org.apache.hadoop.hbase.client.ConnectionFactory;
-import org.apache.hadoop.hbase.client.Table;
 import org.apache.hadoop.hbase.io.ImmutableBytesWritable;
-import org.apache.hadoop.hbase.mapreduce.HFileOutputFormat2;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.db.DBConfiguration;
 import org.apache.hadoop.mapreduce.lib.db.DBInputFormat;
@@ -22,11 +16,11 @@ import org.apache.hadoop.util.ToolRunner;
 import java.io.File;
 
 /**
- * 使用HFile方式导入MySQL数据到HBase中
+ * 按HFile格式输出到HDFS中
  * @author zlikun <zlikun-dev@hotmail.com>
  * @date 2018-01-30 11:31
  */
-public class LoginMapReduceLocal extends Configured implements Tool {
+public class LoginMapReduceHdfs extends Configured implements Tool {
 
     @Override
     public int run(String[] strings) throws Exception {
@@ -37,14 +31,14 @@ public class LoginMapReduceLocal extends Configured implements Tool {
         job.setMapOutputKeyClass(ImmutableBytesWritable.class);
         job.setMapOutputValueClass(KeyValue.class);
         job.setReducerClass(LoginReducer.class);
-        job.setOutputKeyClass(ImmutableBytesWritable.class);
-        job.setOutputValueClass(KeyValue.class);
 
-        // 配置输入
+        FileOutputFormat.setOutputPath(job, new Path("hdfs://m4:9000/output/14"));
+        // 添加mysql驱动依赖(避免直接在集群中添加，要重启集群，不方便)
+        // 下面语句只能集群中运行mapreduce程序时用，本地执行会报错，另一种方法两者可以兼顾，即：通过打包将依赖JAR一并打包实现
         job.addFileToClassPath(new Path("/lib/mysql/mysql-connector-java-5.1.45.jar"));
         DBConfiguration.configureDB(job.getConfiguration(),
                 "com.mysql.jdbc.Driver",
-                "jdbc:mysql://192.168.9.223:3306/test",
+                "jdbc:mysql://192.168.9.223:3306/USER_LOG_LOGIN",
                 "root",
                 "ablejava");
         // 截止 NEW_LOGIN_LOG_2017_06_18 表查询字段列表
@@ -54,28 +48,13 @@ public class LoginMapReduceLocal extends Configured implements Tool {
         // DBInputFormat.setInput() 隐含了：job.setInputFormatClass(DBInputFormat.class);
         DBInputFormat.setInput(job, TblRecord.class,
                 "NEW_LOGIN_LOG", null, null, fields);
-
-        // 配置输出
-        Configuration configuration = HBaseConfiguration.create();
-        // 设置master连接地址
-        configuration.set("hbase.master","m4:16010");
-        // 设置连接参数：HBase数据库所在的主机IP
-        configuration.set("hbase.zookeeper.quorum", "m4");
-        // 设置连接参数：HBase数据库使用的端口
-        configuration.set("hbase.zookeeper.property.clientPort", "2181");
-        Connection connection = ConnectionFactory.createConnection(configuration);
-        Table table = connection.getTable(TableName.valueOf("user_logins"));
-        HFileOutputFormat2.configureIncrementalLoadMap(job, table);
-
-        FileOutputFormat.setOutputPath(job, new Path("/output/15"));
-
         return job.waitForCompletion(true) ? 1 : 0 ;
     }
 
     public static void main(String[] args) throws Exception {
         System.setProperty("HADOOP_USER_NAME", "root");
         Configuration conf = new Configuration();
-        int status = ToolRunner.run(conf, new LoginMapReduceLocal(), args);
+        int status = ToolRunner.run(conf, new LoginMapReduceHdfs(), args);
         System.exit(status);
     }
 
