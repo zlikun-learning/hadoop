@@ -1,0 +1,56 @@
+package com.zlikun.learning.logins.hbase;
+
+import com.zlikun.learning.logins.TblRecord;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.hbase.KeyValue;
+import org.apache.hadoop.hbase.io.ImmutableBytesWritable;
+import org.apache.hadoop.hbase.mapreduce.KeyValueSerialization;
+import org.apache.hadoop.hbase.util.Bytes;
+import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.mrunit.mapreduce.MapDriver;
+import org.junit.Test;
+
+import java.io.IOException;
+
+/**
+ * @author zlikun <zlikun-dev@hotmail.com>
+ * @date 2018-01-30 13:38
+ */
+public class LoginMapReduceTest {
+
+    @Test
+    public void map() throws IOException {
+        // 准备数据
+        final TblRecord record = new TblRecord();
+        record.userId = 1L;
+        record.loginTime = 1517306026L;
+
+        final byte[] rowKeyBytes = Bytes.toBytes(String.format("%012d", record.loginTime / 1000) + String.format("%012d", record.userId));
+        MapDriver<LongWritable, TblRecord, ImmutableBytesWritable, KeyValue> driver = MapDriver.newMapDriver(new LoginMapper());
+        final byte[] familyUser = Bytes.toBytes("user");
+
+        // 配置KeyValue序列化
+        Configuration conf = driver.getConfiguration();
+        conf.setStrings("io.serializations",
+                conf.get("io.serializations"),
+                KeyValueSerialization.class.getName());
+
+        // 执行测试
+        driver.withInput(new LongWritable(1), record)
+                .withOutput(new ImmutableBytesWritable(rowKeyBytes),
+                        new KeyValue(rowKeyBytes, familyUser, Bytes.toBytes("userId"), Bytes.toBytes(record.userId)))
+                .withOutput(new ImmutableBytesWritable(rowKeyBytes),
+                        new KeyValue(rowKeyBytes, familyUser, Bytes.toBytes("loginTime"), Bytes.toBytes(record.loginTime / 1000)))
+                .runTest();
+
+    }
+
+    @Test
+    public void reduce() throws IOException {
+//        ReduceDriver.newReduceDriver(new LoginTimes.TimesReducer())
+//                .withInput(new LongWritable(162047547), Arrays.asList(new IntWritable(1), new IntWritable(2)))
+//                .withOutput(new LongWritable(162047547), new IntWritable(3))
+//                .runTest();
+    }
+
+}

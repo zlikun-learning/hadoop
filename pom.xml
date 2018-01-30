@@ -17,6 +17,7 @@
         <module>05-avro</module>
         <module>06-mapreduce-rpc</module>
         <module>07-hbase</module>
+        <module>08-hbase-import</module>
     </modules>
 
     <properties>
