@@ -18,6 +18,6 @@
 <configuration>
     <property>
         <name>fs.defaultFS</name>
-        <value>hdfs://zlikun:9000</value>
+        <value>hdfs://m4:9000</value>
     </property>
 </configuration>

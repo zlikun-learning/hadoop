@@ -20,6 +20,6 @@
     </property>
     <property>
         <name>yarn.resourcemanager.hostname</name>
-        <value>zlikun</value>
+        <value>m4</value>
     </property>
 </configuration>

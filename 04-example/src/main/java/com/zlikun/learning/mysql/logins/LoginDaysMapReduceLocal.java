@@ -59,7 +59,7 @@ public class LoginDaysMapReduceLocal extends Configured implements Tool {
         job.setMapOutputKeyClass(Text.class);
         job.setMapOutputValueClass(NullWritable.class);
         job.setInputFormatClass(DBInputFormat.class);
-        FileOutputFormat.setOutputPath(job, new Path("hdfs://zlikun:9000/login_days/example2"));
+        FileOutputFormat.setOutputPath(job, new Path("hdfs://m4:9000/output/03"));
         return job.waitForCompletion(true) ? 1 : 0 ;
     }
 
@@ -68,7 +68,7 @@ public class LoginDaysMapReduceLocal extends Configured implements Tool {
      * @throws Exception
      */
     public static void main(String[] args) throws Exception {
-        System.setProperty("HADOOP_USER_NAME", "zlikun");
+        System.setProperty("HADOOP_USER_NAME", "root");
         Configuration conf = new Configuration();
         int status = ToolRunner.run(conf, new LoginDaysMapReduceLocal(), args);
         System.exit(status);
