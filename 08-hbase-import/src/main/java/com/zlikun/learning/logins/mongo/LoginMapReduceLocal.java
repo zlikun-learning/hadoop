@@ -20,7 +20,8 @@ import org.apache.hadoop.util.ToolRunner;
 import java.io.File;
 
 /**
- * 使用HFile方式导入MySQL数据到HBase中
+ * 使用HFile方式导入Mongo数据到HBase中
+ *
  * @author zlikun <zlikun-dev@hotmail.com>
  * @date 2018-01-30 11:31
  */
@@ -32,6 +33,7 @@ public class LoginMapReduceLocal extends Configured implements Tool {
         job.setJar(new File("08-hbase-import\\target\\mr.jar").getAbsolutePath());
 
         // 配置Mongo数据输入
+        job.addFileToClassPath(new Path("/lib/mongo/mongo-java-driver-3.2.1.jar"));
         MongoConfigUtil.setInputURI(job.getConfiguration(), "mongodb://login_logs:ablejava@192.168.9.223:27017/login_logs.LOGIN_LOG_20171227");
         BasicDBObject query = new BasicDBObject();
         MongoConfigUtil.setQuery(job.getConfiguration(), query);
@@ -44,7 +46,7 @@ public class LoginMapReduceLocal extends Configured implements Tool {
         job.setOutputKeyClass(ImmutableBytesWritable.class);
         job.setOutputValueClass(KeyValue.class);
 
-        Path outputPath = new Path("/output/01");
+        Path outputPath = new Path("/output/02");
 
         // 配置输入输出
         job.setInputFormatClass(MongoInputFormat.class);
@@ -52,7 +54,11 @@ public class LoginMapReduceLocal extends Configured implements Tool {
 
         // 配置HBase
         Configuration conf = job.getConfiguration();
-        conf.set("hbase.master","m4:16010");
+        conf.set("hbase.master", "m4:16010");
+        // 设置连接参数：HBase数据库所在的主机IP
+        conf.set("hbase.zookeeper.quorum", "m4");
+        // 设置连接参数：HBase数据库使用的端口
+        conf.set("hbase.zookeeper.property.clientPort", "2181");
         Connection connection = ConnectionFactory.createConnection(conf);
         TableName tableName = TableName.valueOf("user_login_logs");
         Table table = connection.getTable(tableName);
@@ -69,7 +75,7 @@ public class LoginMapReduceLocal extends Configured implements Tool {
         regionLocator.close();
         connection.close();
 
-        return flag ? 1 : 0 ;
+        return flag ? 1 : 0;
     }
 
     public static void main(String[] args) throws Exception {

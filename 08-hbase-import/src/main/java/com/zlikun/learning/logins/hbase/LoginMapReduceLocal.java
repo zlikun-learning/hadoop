@@ -39,7 +39,7 @@ public class LoginMapReduceLocal extends Configured implements Tool {
         job.setOutputValueClass(KeyValue.class);
 
         // 配置输入
-        // job.addFileToClassPath(new Path("/lib/mysql/mysql-connector-java-5.1.45.jar"));
+        job.addFileToClassPath(new Path("/lib/mysql/mysql-connector-java-5.1.45.jar"));
         DBConfiguration.configureDB(job.getConfiguration(),
                 "com.mysql.jdbc.Driver",
                 "jdbc:mysql://192.168.9.223:3306/test",
@@ -58,10 +58,10 @@ public class LoginMapReduceLocal extends Configured implements Tool {
         Configuration conf = job.getConfiguration();
         // 设置master连接地址
         conf.set("hbase.master","m4:16010");
-//        // 设置连接参数：HBase数据库所在的主机IP
-//        conf.set("hbase.zookeeper.quorum", "m4");
-//        // 设置连接参数：HBase数据库使用的端口
-//        conf.set("hbase.zookeeper.property.clientPort", "2181");
+        // 设置连接参数：HBase数据库所在的主机IP
+        conf.set("hbase.zookeeper.quorum", "m4");
+        // 设置连接参数：HBase数据库使用的端口
+        conf.set("hbase.zookeeper.property.clientPort", "2181");
         Connection connection = ConnectionFactory.createConnection(conf);
         TableName tableName = TableName.valueOf("user_login_logs");
         Table table = connection.getTable(tableName);

@@ -31,10 +31,10 @@ public class LoginMapReduceLocal extends Configured implements Tool {
         job.setMapOutputKeyClass(Text.class);
         job.setMapOutputValueClass(NullWritable.class);
         // job.setInputFormatClass(DBInputFormat.class);
-        FileOutputFormat.setOutputPath(job, new Path("hdfs://m4:9000/output/13"));
+        FileOutputFormat.setOutputPath(job, new Path("hdfs://m4:9000/output/01"));
         // 添加mysql驱动依赖(避免直接在集群中添加，要重启集群，不方便)
         // 下面语句只能集群中运行mapreduce程序时用，本地执行会报错，另一种方法两者可以兼顾，即：通过打包将依赖JAR一并打包实现
-        job.addFileToClassPath(new Path("/lib/mysql/mysql-connector-java-5.1.45.jar"));
+        // job.addFileToClassPath(new Path("/lib/mysql/mysql-connector-java-5.1.45.jar"));
         DBConfiguration.configureDB(job.getConfiguration(),
                 "com.mysql.jdbc.Driver",
                 "jdbc:mysql://192.168.9.223:3306/USER_LOG_LOGIN",

@@ -36,9 +36,9 @@ public class LoginMapReduceTest {
 
         // 配置KeyValue序列化
         Configuration conf = driver.getConfiguration();
-//        conf.setStrings("io.serializations",
-//                conf.get("io.serializations"),
-//                MongoSerDe.class.getName());
+        conf.setStrings("io.serializations",
+                conf.get("io.serializations"),
+                KeyValueSerialization.class.getName());
 
         // 执行测试
         driver.withInput(new LongWritable(1), record)
