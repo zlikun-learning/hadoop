@@ -8,9 +8,11 @@ import org.apache.hadoop.hbase.mapreduce.KeyValueSerialization;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.mrunit.mapreduce.MapDriver;
+import org.apache.hadoop.mrunit.mapreduce.ReduceDriver;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 /**
  * @author zlikun <zlikun-dev@hotmail.com>
@@ -47,10 +49,24 @@ public class LoginMapReduceTest {
 
     @Test
     public void reduce() throws IOException {
-//        ReduceDriver.newReduceDriver(new LoginTimes.TimesReducer())
-//                .withInput(new LongWritable(162047547), Arrays.asList(new IntWritable(1), new IntWritable(2)))
-//                .withOutput(new LongWritable(162047547), new IntWritable(3))
-//                .runTest();
+        long userId = 1L;
+        long loginTime = 1517306026L;
+
+        final byte[] rowKeyBytes = Bytes.toBytes(String.format("%012d", loginTime / 1000) + String.format("%012d", userId));
+        final byte[] familyUser = Bytes.toBytes("user");
+
+        ReduceDriver<ImmutableBytesWritable, KeyValue, ImmutableBytesWritable, KeyValue> driver = ReduceDriver.newReduceDriver(new LoginReducer());
+        // 配置KeyValue序列化
+        Configuration conf = driver.getConfiguration();
+        conf.setStrings("io.serializations",
+                conf.get("io.serializations"),
+                KeyValueSerialization.class.getName());
+
+        driver.withInput(new ImmutableBytesWritable(rowKeyBytes),
+                        Arrays.asList(new KeyValue(rowKeyBytes, familyUser, Bytes.toBytes("userId"), Bytes.toBytes(userId))))
+                .withOutput(new ImmutableBytesWritable(rowKeyBytes),
+                        new KeyValue(rowKeyBytes, familyUser, Bytes.toBytes("userId"), Bytes.toBytes(userId)))
+                .runTest();
     }
 
 }

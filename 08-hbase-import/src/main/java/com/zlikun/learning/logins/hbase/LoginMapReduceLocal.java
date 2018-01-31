@@ -12,6 +12,7 @@ import org.apache.hadoop.hbase.client.ConnectionFactory;
 import org.apache.hadoop.hbase.client.Table;
 import org.apache.hadoop.hbase.io.ImmutableBytesWritable;
 import org.apache.hadoop.hbase.mapreduce.HFileOutputFormat2;
+import org.apache.hadoop.hbase.mapreduce.KeyValueSerialization;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.db.DBConfiguration;
 import org.apache.hadoop.mapreduce.lib.db.DBInputFormat;
@@ -67,7 +68,14 @@ public class LoginMapReduceLocal extends Configured implements Tool {
         Table table = connection.getTable(TableName.valueOf("user_logins"));
         HFileOutputFormat2.configureIncrementalLoadMap(job, table);
 
-        FileOutputFormat.setOutputPath(job, new Path("/output/15"));
+        FileOutputFormat.setOutputPath(job, new Path("/output/01"));
+
+        // 配置 KeyValue 类型序列化，否则会报如下错误：
+        // Error: java.io.IOException: Initialization of all the collectors failed. Error in last collector was :null
+        Configuration conf = job.getConfiguration();
+        conf.setStrings("io.serializations",
+                conf.get("io.serializations"),
+                KeyValueSerialization.class.getName());
 
         return job.waitForCompletion(true) ? 1 : 0 ;
     }
