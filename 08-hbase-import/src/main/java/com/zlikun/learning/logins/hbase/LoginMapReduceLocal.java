@@ -4,15 +4,12 @@ import com.zlikun.learning.logins.TblRecord;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.KeyValue;
 import org.apache.hadoop.hbase.TableName;
-import org.apache.hadoop.hbase.client.Connection;
-import org.apache.hadoop.hbase.client.ConnectionFactory;
-import org.apache.hadoop.hbase.client.Table;
+import org.apache.hadoop.hbase.client.*;
 import org.apache.hadoop.hbase.io.ImmutableBytesWritable;
 import org.apache.hadoop.hbase.mapreduce.HFileOutputFormat2;
-import org.apache.hadoop.hbase.mapreduce.KeyValueSerialization;
+import org.apache.hadoop.hbase.mapreduce.LoadIncrementalHFiles;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.db.DBConfiguration;
 import org.apache.hadoop.mapreduce.lib.db.DBInputFormat;
@@ -55,29 +52,39 @@ public class LoginMapReduceLocal extends Configured implements Tool {
         // DBInputFormat.setInput() 隐含了：job.setInputFormatClass(DBInputFormat.class);
         DBInputFormat.setInput(job, TblRecord.class,
                 "NEW_LOGIN_LOG", null, null, fields);
-
-        // 配置输出
-        Configuration configuration = HBaseConfiguration.create();
-        // 设置master连接地址
-        configuration.set("hbase.master","m4:16010");
-        // 设置连接参数：HBase数据库所在的主机IP
-        configuration.set("hbase.zookeeper.quorum", "m4");
-        // 设置连接参数：HBase数据库使用的端口
-        configuration.set("hbase.zookeeper.property.clientPort", "2181");
-        Connection connection = ConnectionFactory.createConnection(configuration);
-        Table table = connection.getTable(TableName.valueOf("user_logins"));
-        HFileOutputFormat2.configureIncrementalLoadMap(job, table);
-
         FileOutputFormat.setOutputPath(job, new Path("/output/01"));
 
-        // 配置 KeyValue 类型序列化，否则会报如下错误：
-        // Error: java.io.IOException: Initialization of all the collectors failed. Error in last collector was :null
+        // 配置HBase
         Configuration conf = job.getConfiguration();
-        conf.setStrings("io.serializations",
-                conf.get("io.serializations"),
-                KeyValueSerialization.class.getName());
+        // 设置master连接地址
+        conf.set("hbase.master","m4:16010");
+        // 设置连接参数：HBase数据库所在的主机IP
+        conf.set("hbase.zookeeper.quorum", "m4");
+        // 设置连接参数：HBase数据库使用的端口
+        conf.set("hbase.zookeeper.property.clientPort", "2181");
+        Connection connection = ConnectionFactory.createConnection(conf);
+        TableName tableName = TableName.valueOf("user_login_logs");
+        Table table = connection.getTable(tableName);
+        RegionLocator regionLocator = connection.getRegionLocator(tableName);
+        HFileOutputFormat2.configureIncrementalLoad(job, table, regionLocator);
 
-        return job.waitForCompletion(true) ? 1 : 0 ;
+//        // 配置 KeyValue 类型序列化，否则会报如下错误：
+//        // Error: java.io.IOException: Initialization of all the collectors failed. Error in last collector was :null
+//        conf.setStrings("io.serializations",
+//                conf.get("io.serializations"),
+//                KeyValueSerialization.class.getName());
+
+        boolean flag = job.waitForCompletion(true);
+
+        // load hfile
+        Admin admin = connection.getAdmin();
+        LoadIncrementalHFiles loadIncrementalHFiles = new LoadIncrementalHFiles(conf);
+        loadIncrementalHFiles.doBulkLoad(new Path("/output/01"), admin, table, regionLocator);
+        admin.close();
+        regionLocator.close();
+        connection.close();
+
+        return flag ? 1 : 0 ;
     }
 
     public static void main(String[] args) throws Exception {
