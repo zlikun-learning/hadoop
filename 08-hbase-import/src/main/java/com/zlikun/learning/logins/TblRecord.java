@@ -14,7 +14,7 @@ import java.sql.Timestamp;
 
 /**
  * MySQL 表记录，用于读写MySQL表数据使用
- * RowKey设计：10位时间戳(精确到秒) + 12位用户ID(左边补零)，目前只有根据时间统计的需求，暂无按用户统计的需求，固暂定按此设计，后期可以引入二级索引实现(非HBase原生，参考360的实现方案)
+ * RowKey设计：12位时间戳(精确到秒，左边补零) + 12位用户ID(左边补零)，目前只有根据时间统计的需求，暂无按用户统计的需求，固暂定按此设计，后期可以引入二级索引实现(非HBase原生，参考360的实现方案)
  * @author zlikun <zlikun-dev@hotmail.com>
  * @date 2018-01-16 11:53
  */
@@ -76,22 +76,26 @@ public class TblRecord implements Writable, DBWritable {
         WritableUtils.writeString(output, value != null ? value.trim() : placeholder);
     }
 
+    private String readString(DataInput input) throws IOException {
+        return WritableUtils.readString(input);
+    }
+
     @Override
     public void readFields(DataInput dataInput) throws IOException {
         this.userId = dataInput.readLong();
         this.loginTime = dataInput.readLong();
         this.appVersionNumber = dataInput.readInt();
-        this.accountType = dataInput.readUTF();
-        this.oauthType = dataInput.readUTF();
-        this.addr = dataInput.readUTF();
-        this.appType = dataInput.readUTF();
-        this.appPlatform = dataInput.readUTF();
-        this.appVersion = dataInput.readUTF();
-        this.deviceNumber = dataInput.readUTF();
-        this.imei = dataInput.readUTF();
-        this.operatorInfo = dataInput.readUTF();
-        this.osVersion = dataInput.readUTF();
-        this.kernelInfo = dataInput.readUTF();
+        this.accountType = readString(dataInput);
+        this.oauthType = readString(dataInput);
+        this.addr = readString(dataInput);
+        this.appType = readString(dataInput);
+        this.appPlatform = readString(dataInput);
+        this.appVersion = readString(dataInput);
+        this.deviceNumber = readString(dataInput);
+        this.imei = readString(dataInput);
+        this.operatorInfo = readString(dataInput);
+        this.osVersion = readString(dataInput);
+        this.kernelInfo = readString(dataInput);
     }
 
     @Override

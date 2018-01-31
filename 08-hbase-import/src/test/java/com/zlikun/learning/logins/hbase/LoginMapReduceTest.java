@@ -26,10 +26,15 @@ public class LoginMapReduceTest {
         final TblRecord record = new TblRecord();
         record.userId = 1L;
         record.loginTime = 1517306026L;
+        record.appType = "ZHSW_QUICK";
+        record.appPlatform = "ANDROID";
+        record.appVersion = "1.0.0";
+        record.appVersionNumber = 12;
 
         final byte[] rowKeyBytes = Bytes.toBytes(String.format("%012d", record.loginTime / 1000) + String.format("%012d", record.userId));
         MapDriver<LongWritable, TblRecord, ImmutableBytesWritable, KeyValue> driver = MapDriver.newMapDriver(new LoginMapper());
         final byte[] familyUser = Bytes.toBytes("user");
+        final byte[] familyApp = Bytes.toBytes("app");
 
         // 配置KeyValue序列化
         Configuration conf = driver.getConfiguration();
@@ -43,6 +48,14 @@ public class LoginMapReduceTest {
                         new KeyValue(rowKeyBytes, familyUser, Bytes.toBytes("userId"), Bytes.toBytes(record.userId)))
                 .withOutput(new ImmutableBytesWritable(rowKeyBytes),
                         new KeyValue(rowKeyBytes, familyUser, Bytes.toBytes("loginTime"), Bytes.toBytes(record.loginTime / 1000)))
+                .withOutput(new ImmutableBytesWritable(rowKeyBytes),
+                        new KeyValue(rowKeyBytes, familyApp, Bytes.toBytes("appType"), Bytes.toBytes(record.appType)))
+                .withOutput(new ImmutableBytesWritable(rowKeyBytes),
+                        new KeyValue(rowKeyBytes, familyApp, Bytes.toBytes("appPlatform"), Bytes.toBytes(record.appPlatform)))
+                .withOutput(new ImmutableBytesWritable(rowKeyBytes),
+                        new KeyValue(rowKeyBytes, familyApp, Bytes.toBytes("appVersion"), Bytes.toBytes(record.appVersion)))
+                .withOutput(new ImmutableBytesWritable(rowKeyBytes),
+                        new KeyValue(rowKeyBytes, familyApp, Bytes.toBytes("appVersionNumber"), Bytes.toBytes(record.appVersionNumber)))
                 .runTest();
 
     }
