@@ -19,7 +19,7 @@ import org.apache.hadoop.util.ToolRunner;
 
 /**
  * 执行时需要把HBase加入到CLASSPATH中
- * HADOOP_CLASSPATH=`$HBASE_HOME/bin/hbase classpath` $HADOOP_HOME/bin/hadoop jar mr.jar com.zlikun.learning.logins.hbase.LoginMapReduce
+ * HADOOP_CLASSPATH=`$HBASE_HOME/bin/hbase classpath` $HADOOP_HOME/bin/hadoop jar mr-bin.jar com.zlikun.learning.logins.hbase.LoginMapReduce
  *
  * 事先把表在HBase中建出来，并使用`user`和`app`两个列族
  * create 'user_login_logs', 'user', 'app'
@@ -43,7 +43,7 @@ public class LoginMapReduce extends Configured implements Tool {
         job.setReducerClass(LoginReducer.class);
 
         // 配置输入
-        job.addFileToClassPath(new Path("/lib/mysql/mysql-connector-java-5.1.45.jar"));
+        // job.addFileToClassPath(new Path("/lib/mysql/mysql-connector-java-5.1.45.jar"));
         DBConfiguration.configureDB(job.getConfiguration(),
                 "com.mysql.jdbc.Driver",
                 args[0],
@@ -108,7 +108,7 @@ public class LoginMapReduce extends Configured implements Tool {
      * 5、HMaster节点地址(host:port)
      * 6、常量 "after" ，用于区分 NEW_LOGIN_LOG_2017_06_25 及之后表多了两个字段情况，为可选字段
      *
-     * HADOOP_CLASSPATH=`$HBASE_HOME/bin/hbase classpath` $HADOOP_HOME/bin/hadoop jar mr.jar com.zlikun.learning.logins.hbase.LoginMapReduce jdbc:mysql://192.168.9.223:3306/test root ablejava NEW_LOGIN_LOG m4:16010
+     * HADOOP_CLASSPATH=`$HBASE_HOME/bin/hbase classpath`:mysql-connector-java-5.1.45.jar $HADOOP_HOME/bin/hadoop jar mr-bin.jar com.zlikun.learning.logins.hbase.LoginMapReduce jdbc:mysql://192.168.9.223:3306/test root ablejava NEW_LOGIN_LOG m4:16010
      * @param args
      * @throws Exception
      */
