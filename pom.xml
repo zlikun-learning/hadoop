@@ -18,6 +18,7 @@
         <module>06-mapreduce-rpc</module>
         <module>07-hbase</module>
         <module>08-hbase-import</module>
+        <module>09-hbase-mapreduce</module>
     </modules>
 
     <properties>
