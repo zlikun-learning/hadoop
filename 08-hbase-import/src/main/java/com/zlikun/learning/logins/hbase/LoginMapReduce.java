@@ -51,8 +51,13 @@ public class LoginMapReduce extends Configured implements Tool {
                 args[2]);
         // 截止 NEW_LOGIN_LOG_2017_06_18 表查询字段列表
         String[] fields = {"USER_ID", "ACCOUNT_TYPE", "OPEN_TYPE", "CLIENT_CODE", "APP_VERSION", "ADDR", "LOGIN_TIME"};
-        // 从 NEW_LOGIN_LOG_2017_06_25 开始，截止NEW_LOGIN_LOG_2017_12_17，增加：DEVICE_NUMBER、IMEI两个字段
-        // String[] fields = {"USER_ID", "ACCOUNT_TYPE", "OPEN_TYPE", "CLIENT_CODE", "APP_VERSION", "ADDR", "LOGIN_TIME", "DEVICE_NUMBER", "IMEI"};
+        // 这里通过[after]参数控制是 NEW_LOGIN_LOG_2017_06_25 之前的表还是之后的表，默认之前
+        if (args.length > 5) {
+            // 从 NEW_LOGIN_LOG_2017_06_25 开始，截止NEW_LOGIN_LOG_2017_12_17，增加：DEVICE_NUMBER、IMEI两个字段
+            if (args[5] != null && args[5].equals("after")) {
+                fields = new String [] {"USER_ID", "ACCOUNT_TYPE", "OPEN_TYPE", "CLIENT_CODE", "APP_VERSION", "ADDR", "LOGIN_TIME", "DEVICE_NUMBER", "IMEI"};
+            }
+        }
 
         // set input / output file path
         // DBInputFormat.setInput() 隐含了：job.setInputFormatClass(DBInputFormat.class);
@@ -101,6 +106,7 @@ public class LoginMapReduce extends Configured implements Tool {
      * 3、password
      * 4、tableName
      * 5、HMaster节点地址(host:port)
+     * 6、常量 "after" ，用于区分 NEW_LOGIN_LOG_2017_06_25 及之后表多了两个字段情况，为可选字段
      *
      * HADOOP_CLASSPATH=`$HBASE_HOME/bin/hbase classpath` $HADOOP_HOME/bin/hadoop jar mr.jar com.zlikun.learning.logins.hbase.LoginMapReduce jdbc:mysql://192.168.9.223:3306/test root ablejava NEW_LOGIN_LOG m4:16010
      * @param args
