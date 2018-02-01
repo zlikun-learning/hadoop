@@ -46,8 +46,8 @@ public class LoginMapper extends Mapper<Object, BSONObject, ImmutableBytesWritab
         String oauthType = obj.getString("oauthType");
         String addr = obj.getString("addr");
         String appType = obj.getString("appType");
-        String appPlatform = obj.getString("appType");
-        String appVersion = obj.getString("appType");
+        String appPlatform = obj.getString("appPlatform");
+        String appVersion = obj.getString("appVersion");
         int appVersionNumber = -1;
         if (obj.containsField("appVersionNumber")) {
             appVersionNumber = obj.getInt("appVersionNumber");

@@ -25,9 +25,9 @@ public class HBaseTest {
     public void init() throws IOException {
         this.configuration = HBaseConfiguration.create();
         // 设置master连接地址
-        configuration.set("hbase.master","hbase.zlikun.com:16010");
+        configuration.set("hbase.master","m4:16010");
         // 设置连接参数：HBase数据库所在的主机IP
-        configuration.set("hbase.zookeeper.quorum", "hbase.zlikun.com");
+        configuration.set("hbase.zookeeper.quorum", "m4");
         // 设置连接参数：HBase数据库使用的端口
         configuration.set("hbase.zookeeper.property.clientPort", "2181");
         this.connection = ConnectionFactory.createConnection(configuration);
