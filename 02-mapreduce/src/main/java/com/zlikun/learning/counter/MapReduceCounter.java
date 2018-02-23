@@ -11,6 +11,7 @@ import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat;
 
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -36,7 +37,7 @@ public class MapReduceCounter {
 //        conf.set("mapreduce.app-submission.cross-platform", "true");
 
         Job job = Job.getInstance(conf);
-        job.setJar("E:\\studio\\git\\hadoop\\02-mapreduce\\target\\mr.jar");
+        job.setJar(new File("02-mapreduce\\target\\mr.jar").getAbsolutePath());
         job.setMapperClass(TokenizerMapper.class);
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(IntWritable.class);
