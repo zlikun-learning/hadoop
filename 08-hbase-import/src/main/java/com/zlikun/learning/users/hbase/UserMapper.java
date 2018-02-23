@@ -23,13 +23,11 @@ public class UserMapper extends Mapper<LongWritable, TblRecord, ImmutableBytesWr
         byte [] rowKeyBytes = Bytes.toBytes(new StringBuilder().append(value.joinDate).append(String.format("%012d", value.userId)).toString());
         ImmutableBytesWritable rowKey = new ImmutableBytesWritable(rowKeyBytes);
 
-        byte [] familyUser = Bytes.toBytes("user");
+        byte [] familyUser = Bytes.toBytes("i");    // 表示info，列族使用简写节省空间
 
         // 用户相关信息列族
         context.write(rowKey, new KeyValue(rowKeyBytes, familyUser, Bytes.toBytes("userId"), Bytes.toBytes(value.userId)));
         context.write(rowKey, new KeyValue(rowKeyBytes, familyUser, Bytes.toBytes("joinDate"), Bytes.toBytes(value.joinDate)));
-
-        // 后续还需要加入认证信息列族
 
     }
 
