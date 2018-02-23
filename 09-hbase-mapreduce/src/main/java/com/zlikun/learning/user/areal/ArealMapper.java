@@ -1,19 +1,21 @@
 package com.zlikun.learning.user.areal;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
+import org.apache.hadoop.fs.FileStatus;
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.io.ImmutableBytesWritable;
 import org.apache.hadoop.hbase.mapreduce.TableMapper;
 import org.apache.hadoop.hbase.util.Bytes;
+import org.apache.hadoop.io.IOUtils;
 import org.apache.hadoop.io.LongWritable;
 
-import java.io.File;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.net.URI;
+import java.io.InputStream;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -37,11 +39,27 @@ public class ArealMapper extends TableMapper<ArealRecord, LongWritable> {
     @Override
     protected void setup(Context context) throws IOException, InterruptedException {
         super.setup(context);
-        if (context.getCacheFiles() != null && context.getCacheFiles().length > 0) {
-            for (URI uri : context.getCacheFiles()) {
-                System.out.println("URI : " + uri.toString());
-                List<String> lines = FileUtils.readLines(new File(uri));
-                for (String line : lines) {
+        hdfs(context);
+    }
+
+    private void hdfs(Context context) throws IOException {
+        FileSystem fs = FileSystem.get(context.getConfiguration()) ;
+        FileStatus[] statuses = fs.listStatus(new Path("/basic/province"));
+        for (FileStatus status : statuses) {
+            if (!status.isFile()) continue;
+            InputStream in = null ;
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            byte [] buf = null;
+            try {
+                in = fs.open(status.getPath()) ;
+                IOUtils.copyBytes(in, out, 4096, false);
+                buf = out.toByteArray();
+            } finally {
+                IOUtils.closeStream(out);
+                IOUtils.closeStream(in);
+            }
+            if (buf != null) {
+                for (String line : new String(buf, "UTF-8").split("\\s+")) {
                     String schoolId = StringUtils.substringBefore(line, ",");
                     String province = StringUtils.substringAfter(line, ",");
                     if (schoolId == null || province == null) continue;
@@ -49,11 +67,10 @@ public class ArealMapper extends TableMapper<ArealRecord, LongWritable> {
                 }
             }
         }
-
     }
 
     /**
-     * 遍历HBase中表数据，根据学校计算用户所属省份，输出：省份、用户、角色信息
+     * 遍历HBase中表数据，根据学校计算用户所属省份，输出：省份、角色信息
      * @param key
      * @param value
      * @param context
@@ -67,7 +84,7 @@ public class ArealMapper extends TableMapper<ArealRecord, LongWritable> {
         long userId = Bytes.toLong(value.getValue(family, Bytes.toBytes("userId")));
         int role = Bytes.toInt(value.getValue(family, Bytes.toBytes("role")));
         String province = this.storage.get(schoolId);
-        if (province == null) return;
+        if (province == null) province = "其它";
         context.write(new ArealRecord(province, role), new LongWritable(userId));
     }
 

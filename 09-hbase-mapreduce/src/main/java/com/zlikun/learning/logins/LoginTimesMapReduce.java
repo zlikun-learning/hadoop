@@ -20,7 +20,7 @@ import java.io.File;
  * @author zlikun <zlikun-dev@hotmail.com>
  * @date 2018-01-31 19:15
  */
-public class LoginTimesMapReduceLocal extends Configured implements Tool {
+public class LoginTimesMapReduce extends Configured implements Tool {
 
     @Override
     public int run(String[] strings) throws Exception {
@@ -69,7 +69,7 @@ public class LoginTimesMapReduceLocal extends Configured implements Tool {
     public static void main(String[] args) throws Exception {
         System.setProperty("HADOOP_USER_NAME", "root");
         Configuration conf = new Configuration();
-        int status = ToolRunner.run(conf, new LoginTimesMapReduceLocal(), args);
+        int status = ToolRunner.run(conf, new LoginTimesMapReduce(), args);
         System.exit(status);
     }
 

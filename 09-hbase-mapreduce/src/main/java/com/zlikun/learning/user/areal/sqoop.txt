@@ -1,0 +1,12 @@
+## 将省份与学校映射关系数据导入到HDFS中
+
+# 如果表不包含主键，则需要指定`--split-by`参数，后接拆分的字段名
+$ /usr/local/sqoop-1.4.6.bin/bin/sqoop import \
+--connect jdbc:mysql://192.168.9.223:3306/DB_BASE_YWJK \
+--username root \
+--password ablejava \
+--table 0000_SCHOOL_CITY \
+--columns "SCHOOL_ID,PROVINCE" \
+--target-dir /basic/province \
+--split-by "SCHOOL_ID" \
+--num-mappers 4

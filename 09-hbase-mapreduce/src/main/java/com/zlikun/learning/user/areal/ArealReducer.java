@@ -1,6 +1,5 @@
 package com.zlikun.learning.user.areal;
 
-import com.zlikun.learning.dau.DateRecord;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.mapreduce.Reducer;
