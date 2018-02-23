@@ -42,11 +42,11 @@ public class ArealMapReduce extends Configured implements Tool {
         Scan scan = new Scan();
         // 设置扫描结束RowKey，取今天0点时间戳(实际不包含)
         Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR, 0);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
-        scan.setStopRow(Bytes.toBytes(String.format("%012d000000000000", calendar.getTimeInMillis() / 1000)));
+        scan.setStopRow(Bytes.toBytes(String.format("%012d000000000000", calendar.getTime().getTime() / 1000)));
 
         // 初始化Mapper
         TableMapReduceUtil.initTableMapperJob("certify", scan, ArealMapper.class, ArealRecord.class, LongWritable.class, job);
@@ -60,7 +60,7 @@ public class ArealMapReduce extends Configured implements Tool {
                 "root",
                 "ablejava");
         // 要写入的字段
-        String[] fields = {"PROVINCE", "ROLE", "USERS"};
+        String[] fields = {"PROVINCE", "USERS", "DATE"};
         DBOutputFormat.setOutput(job, "TBL_USER_AREAL", fields);
 
         return job.waitForCompletion(true) ? 1 : 0 ;

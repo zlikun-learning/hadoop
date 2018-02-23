@@ -82,10 +82,9 @@ public class ArealMapper extends TableMapper<ArealRecord, LongWritable> {
         final byte [] family = Bytes.toBytes("i");
         int schoolId = Bytes.toInt(value.getValue(family, Bytes.toBytes("schoolId")));
         long userId = Bytes.toLong(value.getValue(family, Bytes.toBytes("userId")));
-        int role = Bytes.toInt(value.getValue(family, Bytes.toBytes("role")));
         String province = this.storage.get(schoolId);
         if (province == null) province = "其它";
-        context.write(new ArealRecord(province, role), new LongWritable(userId));
+        context.write(new ArealRecord(province), new LongWritable(userId));
     }
 
 }

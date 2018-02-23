@@ -1,6 +1,5 @@
 package com.zlikun.learning.user.areal;
 
-import com.zlikun.learning.dau.DateRecord;
 import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.io.WritableComparable;
 import org.apache.hadoop.io.WritableUtils;
@@ -9,6 +8,7 @@ import org.apache.hadoop.mapreduce.lib.db.DBWritable;
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -21,20 +21,19 @@ import java.sql.SQLException;
 public class ArealRecord implements Writable, DBWritable, WritableComparable<ArealRecord> {
 
     public String province;
-    public Integer role;
     public Integer users = 0;
+    public Long date;
 
     public ArealRecord() {
     }
 
-    public ArealRecord(String province, Integer role) {
+    public ArealRecord(String province) {
         this.province = province;
-        this.role = role;
     }
 
     @Override
     public String toString() {
-        return this.province + "_" + this.role + "=>" + this.users;
+        return "[" + new Date(this.date) + "] " + this.province + "=>" + this.users;
     }
 
     @Override
@@ -43,33 +42,31 @@ public class ArealRecord implements Writable, DBWritable, WritableComparable<Are
         if (!obj.getClass().equals(ArealRecord.class)) return false;
         if (!(obj instanceof ArealRecord)) return false;
         ArealRecord target = (ArealRecord) obj;
-        return this.province.equals(target.province) && this.role.equals(target.role);
+        return this.province.equals(target.province) ;
     }
 
     @Override
     public int hashCode() {
-        return this.province.hashCode() * 31 + this.role.hashCode();
+        return this.province.hashCode() ;
     }
 
     @Override
     public void write(DataOutput out) throws IOException {
         WritableUtils.writeString(out, province);
-        out.writeInt(role);
         out.writeInt(users);
     }
 
     @Override
     public void readFields(DataInput in) throws IOException {
         this.province = WritableUtils.readString(in);
-        this.role = in.readInt();
         this.users = in.readInt();
     }
 
     @Override
     public void write(PreparedStatement statement) throws SQLException {
         statement.setString(1, this.province);
-        statement.setInt(2, this.role);
-        statement.setInt(3, this.users);
+        statement.setInt(2, this.users);
+        statement.setDate(3, new Date(date));
     }
 
     @Override
@@ -85,8 +82,6 @@ public class ArealRecord implements Writable, DBWritable, WritableComparable<Are
     @Override
     public int compareTo(ArealRecord o) {
         if (o == null) return -1;
-        int flag = this.province.compareTo(o.province);
-        if (flag != 0) return flag;
-        return this.role.compareTo(o.role);
+        return this.province.compareTo(o.province);
     }
 }
