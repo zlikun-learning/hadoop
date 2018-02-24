@@ -21,6 +21,8 @@ public class TblRecord implements Writable, DBWritable {
 
     public Long userId;         // 注册用户ID
     public Integer joinDate;    // 注册日期(格式：yyyyMMdd，示例：20180121)
+    public String name;          // 用户姓名，暂未使用
+    public Date createTime;     // 注册时间，暂未使用
 
     @Override
     public void write(DataOutput out) throws IOException {
