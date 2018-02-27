@@ -35,6 +35,16 @@ public class RoleRecord implements Writable, DBWritable, WritableComparable<Role
     public int compareTo(RoleRecord o) {
         return role.compareTo(o.role);
     }
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null || !obj.getClass().equals(this.getClass())) return false;
+        return ((RoleRecord) obj).role.equals(this.role);
+    }
+
+    @Override
+    public int hashCode() {
+        return this.role.hashCode();
+    }
 
     @Override
     public void write(DataOutput out) throws IOException {
