@@ -29,7 +29,7 @@ public class FilterTest {
     public void init() throws IOException {
         this.configuration = HBaseConfiguration.create();
         this.connection = ConnectionFactory.createConnection(configuration);
-        this.table = connection.getTable(TableName.valueOf("user"));
+        this.table = connection.getTable(TableName.valueOf("certify"));
     }
 
     @After
@@ -84,7 +84,7 @@ public class FilterTest {
         // FilterList
         // 自定义过滤器
         scan.setFilter(new RowFilter(CompareFilter.CompareOp.GREATER_OR_EQUAL,
-                new BinaryComparator(Bytes.toBytes("20180208000172037741"))));
+                new BinaryComparator(Bytes.toBytes("001517932800000170753726"))));
         scan.setCaching(5);
 
         ResultScanner scanner = table.getScanner(scan);
