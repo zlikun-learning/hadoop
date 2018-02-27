@@ -61,6 +61,19 @@ public class HBaseTest {
         descriptor.addFamily(new HColumnDescriptor("info"));
         descriptor.addFamily(new HColumnDescriptor("jobs"));
 
+        // 限制region大小，超过设定值，将发生拆分操作，默认：256MB，单位：字节
+//        descriptor.setMaxFileSize(0L);
+
+        // 设置表为只读，默认：可读写
+//        descriptor.setReadOnly(true);
+
+        // 设置触发刷新缓冲区事件阈值，默认：64MB，单位：字节
+//        descriptor.setMemStoreFlushSize(0L);
+
+        // 延时日志刷写
+
+        // 其它选项
+
         admin.createTable(descriptor);
 
     }
